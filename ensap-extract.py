@@ -6,6 +6,7 @@ from os.path import isfile, join, dirname
 from datetime import datetime
 import locale
 import sqlite3
+import re
 
 script_folder = dirname(__file__)
 
@@ -54,6 +55,10 @@ def extract_data_from_fdp(fdp_file):
 				in_decompte = False
 				continue
 			code = line[0:6]
+			# TODO : Pas de code à 6 chiffres, on ignore la ligne
+			regex = '^[0-9]{6}'
+			if not re.match(regex, code):
+				continue
 			libelle = line[6:line.find('€')-1]
 			montant = line[line.find('€')+1:].strip().replace(',', '.')
 			montant2 = None
